@@ -94,6 +94,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { name: "twitter:title", content: "ProjectFlow — Gantt project planning" },
+      { name: "description", content: "Calm Task Flow is a project management application for creating and visualizing project timelines." },
+      { property: "og:description", content: "Calm Task Flow is a project management application for creating and visualizing project timelines." },
+      { name: "twitter:description", content: "Calm Task Flow is a project management application for creating and visualizing project timelines." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/GfgVhjkxp9hPEGR1L0vB1UELqUg2/social-images/social-1782650159333-gantt.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/GfgVhjkxp9hPEGR1L0vB1UELqUg2/social-images/social-1782650159333-gantt.webp" },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
