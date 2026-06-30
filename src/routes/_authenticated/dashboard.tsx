@@ -32,7 +32,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { GanttChartSquare, Plus, Trash2, Pencil, ArrowRight } from "lucide-react";
+import { GanttChartSquare, Plus, Trash2, Pencil, ArrowRight, Bot } from "lucide-react";
 
 const chartsQuery = queryOptions({ queryKey: ["charts"], queryFn: () => listCharts() });
 
