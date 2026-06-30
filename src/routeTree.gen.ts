@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWorkforceRouteImport } from './routes/_authenticated/workforce'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedWorkforceIndexRouteImport } from './routes/_authenticated/workforce.index'
+import { Route as AuthenticatedWorkforceMeetingsRouteImport } from './routes/_authenticated/workforce.meetings'
 import { Route as AuthenticatedWorkforceEmailRouteImport } from './routes/_authenticated/workforce.email'
 import { Route as AuthenticatedChartChartIdRouteImport } from './routes/_authenticated/chart.$chartId'
 
@@ -48,6 +49,12 @@ const AuthenticatedWorkforceIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedWorkforceRoute,
   } as any)
+const AuthenticatedWorkforceMeetingsRoute =
+  AuthenticatedWorkforceMeetingsRouteImport.update({
+    id: '/meetings',
+    path: '/meetings',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
 const AuthenticatedWorkforceEmailRoute =
   AuthenticatedWorkforceEmailRouteImport.update({
     id: '/email',
@@ -68,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/workforce': typeof AuthenticatedWorkforceRouteWithChildren
   '/chart/$chartId': typeof AuthenticatedChartChartIdRoute
   '/workforce/email': typeof AuthenticatedWorkforceEmailRoute
+  '/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
   '/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesByTo {
@@ -76,6 +84,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/chart/$chartId': typeof AuthenticatedChartChartIdRoute
   '/workforce/email': typeof AuthenticatedWorkforceEmailRoute
+  '/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
   '/workforce': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesById {
@@ -87,6 +96,7 @@ export interface FileRoutesById {
   '/_authenticated/workforce': typeof AuthenticatedWorkforceRouteWithChildren
   '/_authenticated/chart/$chartId': typeof AuthenticatedChartChartIdRoute
   '/_authenticated/workforce/email': typeof AuthenticatedWorkforceEmailRoute
+  '/_authenticated/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
   '/_authenticated/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRouteTypes {
@@ -98,6 +108,7 @@ export interface FileRouteTypes {
     | '/workforce'
     | '/chart/$chartId'
     | '/workforce/email'
+    | '/workforce/meetings'
     | '/workforce/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/chart/$chartId'
     | '/workforce/email'
+    | '/workforce/meetings'
     | '/workforce'
   id:
     | '__root__'
@@ -116,6 +128,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workforce'
     | '/_authenticated/chart/$chartId'
     | '/_authenticated/workforce/email'
+    | '/_authenticated/workforce/meetings'
     | '/_authenticated/workforce/'
   fileRoutesById: FileRoutesById
 }
@@ -169,6 +182,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkforceIndexRouteImport
       parentRoute: typeof AuthenticatedWorkforceRoute
     }
+    '/_authenticated/workforce/meetings': {
+      id: '/_authenticated/workforce/meetings'
+      path: '/meetings'
+      fullPath: '/workforce/meetings'
+      preLoaderRoute: typeof AuthenticatedWorkforceMeetingsRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
     '/_authenticated/workforce/email': {
       id: '/_authenticated/workforce/email'
       path: '/email'
@@ -188,12 +208,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedWorkforceRouteChildren {
   AuthenticatedWorkforceEmailRoute: typeof AuthenticatedWorkforceEmailRoute
+  AuthenticatedWorkforceMeetingsRoute: typeof AuthenticatedWorkforceMeetingsRoute
   AuthenticatedWorkforceIndexRoute: typeof AuthenticatedWorkforceIndexRoute
 }
 
 const AuthenticatedWorkforceRouteChildren: AuthenticatedWorkforceRouteChildren =
   {
     AuthenticatedWorkforceEmailRoute: AuthenticatedWorkforceEmailRoute,
+    AuthenticatedWorkforceMeetingsRoute: AuthenticatedWorkforceMeetingsRoute,
     AuthenticatedWorkforceIndexRoute: AuthenticatedWorkforceIndexRoute,
   }
 
