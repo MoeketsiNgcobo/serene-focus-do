@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWorkforceRouteImport } from './routes/_authenticated/workforce'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedWorkforceIndexRouteImport } from './routes/_authenticated/workforce.index'
+import { Route as AuthenticatedWorkforceResponsibleAiRouteImport } from './routes/_authenticated/workforce.responsible-ai'
 import { Route as AuthenticatedWorkforcePlannerRouteImport } from './routes/_authenticated/workforce.planner'
 import { Route as AuthenticatedWorkforceMeetingsRouteImport } from './routes/_authenticated/workforce.meetings'
 import { Route as AuthenticatedWorkforceEmailRouteImport } from './routes/_authenticated/workforce.email'
@@ -48,6 +49,12 @@ const AuthenticatedWorkforceIndexRoute =
   AuthenticatedWorkforceIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
+const AuthenticatedWorkforceResponsibleAiRoute =
+  AuthenticatedWorkforceResponsibleAiRouteImport.update({
+    id: '/responsible-ai',
+    path: '/responsible-ai',
     getParentRoute: () => AuthenticatedWorkforceRoute,
   } as any)
 const AuthenticatedWorkforcePlannerRoute =
@@ -84,6 +91,7 @@ export interface FileRoutesByFullPath {
   '/workforce/email': typeof AuthenticatedWorkforceEmailRoute
   '/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
   '/workforce/planner': typeof AuthenticatedWorkforcePlannerRoute
+  '/workforce/responsible-ai': typeof AuthenticatedWorkforceResponsibleAiRoute
   '/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesByTo {
@@ -94,6 +102,7 @@ export interface FileRoutesByTo {
   '/workforce/email': typeof AuthenticatedWorkforceEmailRoute
   '/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
   '/workforce/planner': typeof AuthenticatedWorkforcePlannerRoute
+  '/workforce/responsible-ai': typeof AuthenticatedWorkforceResponsibleAiRoute
   '/workforce': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesById {
@@ -107,6 +116,7 @@ export interface FileRoutesById {
   '/_authenticated/workforce/email': typeof AuthenticatedWorkforceEmailRoute
   '/_authenticated/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
   '/_authenticated/workforce/planner': typeof AuthenticatedWorkforcePlannerRoute
+  '/_authenticated/workforce/responsible-ai': typeof AuthenticatedWorkforceResponsibleAiRoute
   '/_authenticated/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRouteTypes {
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/workforce/email'
     | '/workforce/meetings'
     | '/workforce/planner'
+    | '/workforce/responsible-ai'
     | '/workforce/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/workforce/email'
     | '/workforce/meetings'
     | '/workforce/planner'
+    | '/workforce/responsible-ai'
     | '/workforce'
   id:
     | '__root__'
@@ -142,6 +154,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workforce/email'
     | '/_authenticated/workforce/meetings'
     | '/_authenticated/workforce/planner'
+    | '/_authenticated/workforce/responsible-ai'
     | '/_authenticated/workforce/'
   fileRoutesById: FileRoutesById
 }
@@ -195,6 +208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkforceIndexRouteImport
       parentRoute: typeof AuthenticatedWorkforceRoute
     }
+    '/_authenticated/workforce/responsible-ai': {
+      id: '/_authenticated/workforce/responsible-ai'
+      path: '/responsible-ai'
+      fullPath: '/workforce/responsible-ai'
+      preLoaderRoute: typeof AuthenticatedWorkforceResponsibleAiRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
     '/_authenticated/workforce/planner': {
       id: '/_authenticated/workforce/planner'
       path: '/planner'
@@ -230,6 +250,7 @@ interface AuthenticatedWorkforceRouteChildren {
   AuthenticatedWorkforceEmailRoute: typeof AuthenticatedWorkforceEmailRoute
   AuthenticatedWorkforceMeetingsRoute: typeof AuthenticatedWorkforceMeetingsRoute
   AuthenticatedWorkforcePlannerRoute: typeof AuthenticatedWorkforcePlannerRoute
+  AuthenticatedWorkforceResponsibleAiRoute: typeof AuthenticatedWorkforceResponsibleAiRoute
   AuthenticatedWorkforceIndexRoute: typeof AuthenticatedWorkforceIndexRoute
 }
 
@@ -238,6 +259,8 @@ const AuthenticatedWorkforceRouteChildren: AuthenticatedWorkforceRouteChildren =
     AuthenticatedWorkforceEmailRoute: AuthenticatedWorkforceEmailRoute,
     AuthenticatedWorkforceMeetingsRoute: AuthenticatedWorkforceMeetingsRoute,
     AuthenticatedWorkforcePlannerRoute: AuthenticatedWorkforcePlannerRoute,
+    AuthenticatedWorkforceResponsibleAiRoute:
+      AuthenticatedWorkforceResponsibleAiRoute,
     AuthenticatedWorkforceIndexRoute: AuthenticatedWorkforceIndexRoute,
   }
 
