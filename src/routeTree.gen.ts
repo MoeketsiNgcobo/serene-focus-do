@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWorkforceRouteImport } from './routes/_authenticated/workforce'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedWorkforceIndexRouteImport } from './routes/_authenticated/workforce.index'
+import { Route as AuthenticatedWorkforceEmailRouteImport } from './routes/_authenticated/workforce.email'
 import { Route as AuthenticatedChartChartIdRouteImport } from './routes/_authenticated/chart.$chartId'
 
 const AuthRoute = AuthRouteImport.update({
@@ -47,6 +48,12 @@ const AuthenticatedWorkforceIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedWorkforceRoute,
   } as any)
+const AuthenticatedWorkforceEmailRoute =
+  AuthenticatedWorkforceEmailRouteImport.update({
+    id: '/email',
+    path: '/email',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
 const AuthenticatedChartChartIdRoute =
   AuthenticatedChartChartIdRouteImport.update({
     id: '/chart/$chartId',
@@ -60,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/workforce': typeof AuthenticatedWorkforceRouteWithChildren
   '/chart/$chartId': typeof AuthenticatedChartChartIdRoute
+  '/workforce/email': typeof AuthenticatedWorkforceEmailRoute
   '/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesByTo {
@@ -67,6 +75,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/chart/$chartId': typeof AuthenticatedChartChartIdRoute
+  '/workforce/email': typeof AuthenticatedWorkforceEmailRoute
   '/workforce': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesById {
@@ -77,6 +86,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/workforce': typeof AuthenticatedWorkforceRouteWithChildren
   '/_authenticated/chart/$chartId': typeof AuthenticatedChartChartIdRoute
+  '/_authenticated/workforce/email': typeof AuthenticatedWorkforceEmailRoute
   '/_authenticated/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRouteTypes {
@@ -87,9 +97,16 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/workforce'
     | '/chart/$chartId'
+    | '/workforce/email'
     | '/workforce/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/chart/$chartId' | '/workforce'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/chart/$chartId'
+    | '/workforce/email'
+    | '/workforce'
   id:
     | '__root__'
     | '/'
@@ -98,6 +115,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/workforce'
     | '/_authenticated/chart/$chartId'
+    | '/_authenticated/workforce/email'
     | '/_authenticated/workforce/'
   fileRoutesById: FileRoutesById
 }
@@ -151,6 +169,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkforceIndexRouteImport
       parentRoute: typeof AuthenticatedWorkforceRoute
     }
+    '/_authenticated/workforce/email': {
+      id: '/_authenticated/workforce/email'
+      path: '/email'
+      fullPath: '/workforce/email'
+      preLoaderRoute: typeof AuthenticatedWorkforceEmailRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
     '/_authenticated/chart/$chartId': {
       id: '/_authenticated/chart/$chartId'
       path: '/chart/$chartId'
@@ -162,11 +187,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedWorkforceRouteChildren {
+  AuthenticatedWorkforceEmailRoute: typeof AuthenticatedWorkforceEmailRoute
   AuthenticatedWorkforceIndexRoute: typeof AuthenticatedWorkforceIndexRoute
 }
 
 const AuthenticatedWorkforceRouteChildren: AuthenticatedWorkforceRouteChildren =
   {
+    AuthenticatedWorkforceEmailRoute: AuthenticatedWorkforceEmailRoute,
     AuthenticatedWorkforceIndexRoute: AuthenticatedWorkforceIndexRoute,
   }
 
