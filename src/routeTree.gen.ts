@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWorkforceRouteImport } from './routes/_authenticated/workforce'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedWorkforceIndexRouteImport } from './routes/_authenticated/workforce.index'
+import { Route as AuthenticatedWorkforceSettingsRouteImport } from './routes/_authenticated/workforce.settings'
 import { Route as AuthenticatedWorkforceResponsibleAiRouteImport } from './routes/_authenticated/workforce.responsible-ai'
 import { Route as AuthenticatedWorkforcePlannerRouteImport } from './routes/_authenticated/workforce.planner'
 import { Route as AuthenticatedWorkforceMeetingsRouteImport } from './routes/_authenticated/workforce.meetings'
@@ -49,6 +50,12 @@ const AuthenticatedWorkforceIndexRoute =
   AuthenticatedWorkforceIndexRouteImport.update({
     id: '/',
     path: '/',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
+const AuthenticatedWorkforceSettingsRoute =
+  AuthenticatedWorkforceSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
     getParentRoute: () => AuthenticatedWorkforceRoute,
   } as any)
 const AuthenticatedWorkforceResponsibleAiRoute =
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
   '/workforce/planner': typeof AuthenticatedWorkforcePlannerRoute
   '/workforce/responsible-ai': typeof AuthenticatedWorkforceResponsibleAiRoute
+  '/workforce/settings': typeof AuthenticatedWorkforceSettingsRoute
   '/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesByTo {
@@ -103,6 +111,7 @@ export interface FileRoutesByTo {
   '/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
   '/workforce/planner': typeof AuthenticatedWorkforcePlannerRoute
   '/workforce/responsible-ai': typeof AuthenticatedWorkforceResponsibleAiRoute
+  '/workforce/settings': typeof AuthenticatedWorkforceSettingsRoute
   '/workforce': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesById {
@@ -117,6 +126,7 @@ export interface FileRoutesById {
   '/_authenticated/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
   '/_authenticated/workforce/planner': typeof AuthenticatedWorkforcePlannerRoute
   '/_authenticated/workforce/responsible-ai': typeof AuthenticatedWorkforceResponsibleAiRoute
+  '/_authenticated/workforce/settings': typeof AuthenticatedWorkforceSettingsRoute
   '/_authenticated/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRouteTypes {
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/workforce/meetings'
     | '/workforce/planner'
     | '/workforce/responsible-ai'
+    | '/workforce/settings'
     | '/workforce/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/workforce/meetings'
     | '/workforce/planner'
     | '/workforce/responsible-ai'
+    | '/workforce/settings'
     | '/workforce'
   id:
     | '__root__'
@@ -155,6 +167,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workforce/meetings'
     | '/_authenticated/workforce/planner'
     | '/_authenticated/workforce/responsible-ai'
+    | '/_authenticated/workforce/settings'
     | '/_authenticated/workforce/'
   fileRoutesById: FileRoutesById
 }
@@ -208,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkforceIndexRouteImport
       parentRoute: typeof AuthenticatedWorkforceRoute
     }
+    '/_authenticated/workforce/settings': {
+      id: '/_authenticated/workforce/settings'
+      path: '/settings'
+      fullPath: '/workforce/settings'
+      preLoaderRoute: typeof AuthenticatedWorkforceSettingsRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
     '/_authenticated/workforce/responsible-ai': {
       id: '/_authenticated/workforce/responsible-ai'
       path: '/responsible-ai'
@@ -251,6 +271,7 @@ interface AuthenticatedWorkforceRouteChildren {
   AuthenticatedWorkforceMeetingsRoute: typeof AuthenticatedWorkforceMeetingsRoute
   AuthenticatedWorkforcePlannerRoute: typeof AuthenticatedWorkforcePlannerRoute
   AuthenticatedWorkforceResponsibleAiRoute: typeof AuthenticatedWorkforceResponsibleAiRoute
+  AuthenticatedWorkforceSettingsRoute: typeof AuthenticatedWorkforceSettingsRoute
   AuthenticatedWorkforceIndexRoute: typeof AuthenticatedWorkforceIndexRoute
 }
 
@@ -261,6 +282,7 @@ const AuthenticatedWorkforceRouteChildren: AuthenticatedWorkforceRouteChildren =
     AuthenticatedWorkforcePlannerRoute: AuthenticatedWorkforcePlannerRoute,
     AuthenticatedWorkforceResponsibleAiRoute:
       AuthenticatedWorkforceResponsibleAiRoute,
+    AuthenticatedWorkforceSettingsRoute: AuthenticatedWorkforceSettingsRoute,
     AuthenticatedWorkforceIndexRoute: AuthenticatedWorkforceIndexRoute,
   }
 
