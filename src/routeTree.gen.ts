@@ -12,7 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedWorkforceRouteImport } from './routes/_authenticated/workforce'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedWorkforceIndexRouteImport } from './routes/_authenticated/workforce.index'
+import { Route as AuthenticatedWorkforceSettingsRouteImport } from './routes/_authenticated/workforce.settings'
+import { Route as AuthenticatedWorkforceResponsibleAiRouteImport } from './routes/_authenticated/workforce.responsible-ai'
+import { Route as AuthenticatedWorkforcePlannerRouteImport } from './routes/_authenticated/workforce.planner'
+import { Route as AuthenticatedWorkforceMeetingsRouteImport } from './routes/_authenticated/workforce.meetings'
+import { Route as AuthenticatedWorkforceEmailRouteImport } from './routes/_authenticated/workforce.email'
 import { Route as AuthenticatedChartChartIdRouteImport } from './routes/_authenticated/chart.$chartId'
 
 const AuthRoute = AuthRouteImport.update({
@@ -29,11 +36,52 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedWorkforceRoute = AuthenticatedWorkforceRouteImport.update({
+  id: '/workforce',
+  path: '/workforce',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedWorkforceIndexRoute =
+  AuthenticatedWorkforceIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
+const AuthenticatedWorkforceSettingsRoute =
+  AuthenticatedWorkforceSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
+const AuthenticatedWorkforceResponsibleAiRoute =
+  AuthenticatedWorkforceResponsibleAiRouteImport.update({
+    id: '/responsible-ai',
+    path: '/responsible-ai',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
+const AuthenticatedWorkforcePlannerRoute =
+  AuthenticatedWorkforcePlannerRouteImport.update({
+    id: '/planner',
+    path: '/planner',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
+const AuthenticatedWorkforceMeetingsRoute =
+  AuthenticatedWorkforceMeetingsRouteImport.update({
+    id: '/meetings',
+    path: '/meetings',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
+const AuthenticatedWorkforceEmailRoute =
+  AuthenticatedWorkforceEmailRouteImport.update({
+    id: '/email',
+    path: '/email',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
 const AuthenticatedChartChartIdRoute =
   AuthenticatedChartChartIdRouteImport.update({
     id: '/chart/$chartId',
@@ -45,13 +93,26 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/workforce': typeof AuthenticatedWorkforceRouteWithChildren
   '/chart/$chartId': typeof AuthenticatedChartChartIdRoute
+  '/workforce/email': typeof AuthenticatedWorkforceEmailRoute
+  '/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
+  '/workforce/planner': typeof AuthenticatedWorkforcePlannerRoute
+  '/workforce/responsible-ai': typeof AuthenticatedWorkforceResponsibleAiRoute
+  '/workforce/settings': typeof AuthenticatedWorkforceSettingsRoute
+  '/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/chart/$chartId': typeof AuthenticatedChartChartIdRoute
+  '/workforce/email': typeof AuthenticatedWorkforceEmailRoute
+  '/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
+  '/workforce/planner': typeof AuthenticatedWorkforcePlannerRoute
+  '/workforce/responsible-ai': typeof AuthenticatedWorkforceResponsibleAiRoute
+  '/workforce/settings': typeof AuthenticatedWorkforceSettingsRoute
+  '/workforce': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,20 +120,55 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/workforce': typeof AuthenticatedWorkforceRouteWithChildren
   '/_authenticated/chart/$chartId': typeof AuthenticatedChartChartIdRoute
+  '/_authenticated/workforce/email': typeof AuthenticatedWorkforceEmailRoute
+  '/_authenticated/workforce/meetings': typeof AuthenticatedWorkforceMeetingsRoute
+  '/_authenticated/workforce/planner': typeof AuthenticatedWorkforcePlannerRoute
+  '/_authenticated/workforce/responsible-ai': typeof AuthenticatedWorkforceResponsibleAiRoute
+  '/_authenticated/workforce/settings': typeof AuthenticatedWorkforceSettingsRoute
+  '/_authenticated/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/chart/$chartId'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/workforce'
+    | '/chart/$chartId'
+    | '/workforce/email'
+    | '/workforce/meetings'
+    | '/workforce/planner'
+    | '/workforce/responsible-ai'
+    | '/workforce/settings'
+    | '/workforce/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/chart/$chartId'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/chart/$chartId'
+    | '/workforce/email'
+    | '/workforce/meetings'
+    | '/workforce/planner'
+    | '/workforce/responsible-ai'
+    | '/workforce/settings'
+    | '/workforce'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/dashboard'
+    | '/_authenticated/workforce'
     | '/_authenticated/chart/$chartId'
+    | '/_authenticated/workforce/email'
+    | '/_authenticated/workforce/meetings'
+    | '/_authenticated/workforce/planner'
+    | '/_authenticated/workforce/responsible-ai'
+    | '/_authenticated/workforce/settings'
+    | '/_authenticated/workforce/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -104,12 +200,61 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/workforce': {
+      id: '/_authenticated/workforce'
+      path: '/workforce'
+      fullPath: '/workforce'
+      preLoaderRoute: typeof AuthenticatedWorkforceRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/workforce/': {
+      id: '/_authenticated/workforce/'
+      path: '/'
+      fullPath: '/workforce/'
+      preLoaderRoute: typeof AuthenticatedWorkforceIndexRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
+    '/_authenticated/workforce/settings': {
+      id: '/_authenticated/workforce/settings'
+      path: '/settings'
+      fullPath: '/workforce/settings'
+      preLoaderRoute: typeof AuthenticatedWorkforceSettingsRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
+    '/_authenticated/workforce/responsible-ai': {
+      id: '/_authenticated/workforce/responsible-ai'
+      path: '/responsible-ai'
+      fullPath: '/workforce/responsible-ai'
+      preLoaderRoute: typeof AuthenticatedWorkforceResponsibleAiRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
+    '/_authenticated/workforce/planner': {
+      id: '/_authenticated/workforce/planner'
+      path: '/planner'
+      fullPath: '/workforce/planner'
+      preLoaderRoute: typeof AuthenticatedWorkforcePlannerRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
+    '/_authenticated/workforce/meetings': {
+      id: '/_authenticated/workforce/meetings'
+      path: '/meetings'
+      fullPath: '/workforce/meetings'
+      preLoaderRoute: typeof AuthenticatedWorkforceMeetingsRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
+    '/_authenticated/workforce/email': {
+      id: '/_authenticated/workforce/email'
+      path: '/email'
+      fullPath: '/workforce/email'
+      preLoaderRoute: typeof AuthenticatedWorkforceEmailRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
     }
     '/_authenticated/chart/$chartId': {
       id: '/_authenticated/chart/$chartId'
@@ -121,13 +266,40 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedWorkforceRouteChildren {
+  AuthenticatedWorkforceEmailRoute: typeof AuthenticatedWorkforceEmailRoute
+  AuthenticatedWorkforceMeetingsRoute: typeof AuthenticatedWorkforceMeetingsRoute
+  AuthenticatedWorkforcePlannerRoute: typeof AuthenticatedWorkforcePlannerRoute
+  AuthenticatedWorkforceResponsibleAiRoute: typeof AuthenticatedWorkforceResponsibleAiRoute
+  AuthenticatedWorkforceSettingsRoute: typeof AuthenticatedWorkforceSettingsRoute
+  AuthenticatedWorkforceIndexRoute: typeof AuthenticatedWorkforceIndexRoute
+}
+
+const AuthenticatedWorkforceRouteChildren: AuthenticatedWorkforceRouteChildren =
+  {
+    AuthenticatedWorkforceEmailRoute: AuthenticatedWorkforceEmailRoute,
+    AuthenticatedWorkforceMeetingsRoute: AuthenticatedWorkforceMeetingsRoute,
+    AuthenticatedWorkforcePlannerRoute: AuthenticatedWorkforcePlannerRoute,
+    AuthenticatedWorkforceResponsibleAiRoute:
+      AuthenticatedWorkforceResponsibleAiRoute,
+    AuthenticatedWorkforceSettingsRoute: AuthenticatedWorkforceSettingsRoute,
+    AuthenticatedWorkforceIndexRoute: AuthenticatedWorkforceIndexRoute,
+  }
+
+const AuthenticatedWorkforceRouteWithChildren =
+  AuthenticatedWorkforceRoute._addFileChildren(
+    AuthenticatedWorkforceRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedWorkforceRoute: typeof AuthenticatedWorkforceRouteWithChildren
   AuthenticatedChartChartIdRoute: typeof AuthenticatedChartChartIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedWorkforceRoute: AuthenticatedWorkforceRouteWithChildren,
   AuthenticatedChartChartIdRoute: AuthenticatedChartChartIdRoute,
 }
 
@@ -142,13 +314,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

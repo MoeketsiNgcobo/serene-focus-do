@@ -32,7 +32,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
-import { GanttChartSquare, Plus, Trash2, Pencil, ArrowRight } from "lucide-react";
+import { GanttChartSquare, Plus, Trash2, Pencil, ArrowRight, Bot } from "lucide-react";
 
 const chartsQuery = queryOptions({ queryKey: ["charts"], queryFn: () => listCharts() });
 
@@ -93,6 +93,21 @@ function Dashboard() {
 
   return (
     <AppShell>
+      <Link to="/workforce/email" className="mb-6 block">
+        <Card className="flex items-center gap-4 border-primary/30 bg-primary/5 p-5 transition-colors hover:bg-primary/10">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/15">
+            <Bot className="h-6 w-6 text-primary" />
+          </div>
+          <div className="flex-1">
+            <h2 className="font-semibold text-foreground">WorkforceAI Assistant</h2>
+            <p className="text-sm text-muted-foreground">
+              Generate emails, summarize meetings, and plan your day with AI.
+            </p>
+          </div>
+          <ArrowRight className="h-5 w-5 text-primary" />
+        </Card>
+      </Link>
+
       <div className="mb-6 flex items-end justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Your charts</h1>
