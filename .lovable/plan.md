@@ -1,52 +1,49 @@
-## ProjectFlow — Gantt-based project management app
+# WorkforceAI — AI Workplace Productivity Assistant
 
-A clean, minimal project-management tool centered on Gantt charts (not a simple to-do list). Accounts and data sync via Lovable Cloud, with light/dark mode and an Ocean Deep palette (deep navy → teal → aqua).
+A second integrated module added **alongside** the existing ProjectFlow Gantt app. New routes live under `/workforce/*`, share the existing auth, theme, and Lovable Cloud backend, and the dashboard gains a card linking to it.
 
-### Core concepts
-- **Charts (Projects):** A user can own multiple Gantt charts. Add a new chart, rename it, delete it.
-- **Tasks:** Each task belongs to a chart and has a name, start date, end date, category, notes, completion status, and assigned collaborators. Full CRUD.
-- **Collaborators:** People who can be assigned to tasks. Each has a name, experience level, and hourly cost. Progress is auto-calculated from their completed assigned tasks.
-- **Visualizations:** Gantt timeline (primary), a pie chart of planned-duration share per activity, and a collaborators table with progress/experience/cost.
+## Architecture decisions (from your answers)
+- **Added alongside** ProjectFlow — nothing existing is removed.
+- **Both AI paths** in one "Select AI Engine" dropdown:
+  - *Mock Demonstration Mode* — 1.5s simulated load, local string-matching mock data tailored to inputs + Global Context.
+  - *Lovable AI* (recommended, no key) — routed through a server function/server route to Lovable AI Gateway.
+  - *Live Google Gemini (BYOK)* — direct client `fetch` to the Gemini endpoint with the localStorage key.
+  - *Live OpenAI (BYOK)* — direct client `fetch` to `gpt-4o-mini` with Bearer token.
+- **Lovable Cloud accounts** — Global Context, engine selection, and module run history sync per-user via the database. API keys (BYOK) stay in `localStorage` only (never sent to our backend), satisfying the privacy claim.
 
-### Pages & layout
-```
-/auth                     Sign in / sign up (email+password + Google)
-/_authenticated
-  /                       Dashboard: list of charts, create/delete chart
-  /chart/$chartId         Single chart workspace:
-                            - Gantt timeline (tasks as bars across dates)
-                            - Task CRUD (dialog/sheet to add/edit/delete)
-                            - Pie chart: planned duration per activity
-                            - Collaborators table: progress, experience, cost/hr
-                            - Notes + assignee management per task
-```
-A top header carries the app name, dark-mode toggle, and sign-out. A sidebar lists the user's charts for quick switching.
+## Layout & navigation
+- New left **sidebar shell** for the WorkforceAI section (Slate/Zinc palette, glassmorphism panels, smooth transitions, Lucide icons), separate from ProjectFlow's top-bar shell.
+- Sidebar contents:
+  - Logo "WorkforceAI"
+  - **Global Context** panel (persistent textarea "Current Role & Focus" with the specified default text; saved to global state + synced to DB, debounced)
+  - Links: Email Generator, Meeting Summarizer, Task Planner
+  - Responsible AI, Settings (bottom)
+- Engine selection + Global Context held in a React context provider so every module reads them.
 
-### Features in detail
-1. **Charts management** — grid of chart cards on the dashboard; "New chart" button; delete with confirmation. Each card shows task count and date range.
-2. **Gantt chart** — horizontal timeline where each task renders as a bar positioned by start/end date. Color-coded by category. Completed tasks visually distinguished. Built with a custom CSS-grid timeline (lightweight, no heavy canvas library) so it stays clean and themeable.
-3. **Task CRUD** — create/edit via a form (name, category, start date, end date, notes, assignees, complete checkbox). Delete with confirm. Mark complete inline.
-4. **Categories** — each task has a category (e.g. Design, Dev, Research); used for color-coding and as the pie chart's grouping basis is per-task activity.
-5. **Pie chart** — Recharts pie showing each task/activity's share of total planned duration (end − start) within the chart.
-6. **Collaborators table** — lists collaborators on the chart with: assigned task count, **auto-calculated progress** (% of their assigned tasks marked complete), experience level, hourly cost, and a computed total cost (hours × rate based on assigned task durations). Add/edit/delete collaborators.
-7. **Dark mode** — toggle persisted; Ocean Deep theme tuned for both modes.
+## Modules
+1. **Smart Email Generator** — Topic textarea, Audience dropdown (Client/Manager/Team), Tone buttons (Formal/Persuasive/Assertive). Output card: Subject + Body.
+2. **Meeting Notes Summarizer** — transcript textarea. Output in tabs: Executive Summary, Decisions Made, Action Items (table: Task / Assigned To / Deadline).
+3. **Energy-Aware Task Planner** — daily-tasks textarea. Output: chronological timeline, Eisenhower matrix indicators, Cognitive Load badges (High/Med/Low), and auto-inserted "Screen-Free Breaks" between consecutive High-load tasks.
 
-### Design direction
-- **Palette (Ocean Deep):** deep navy `#0c2340`, ocean blue `#1a4a6e`, teal `#2d8a9e`, aqua `#5cbdb9`. Mapped to semantic tokens in `src/styles.css` (oklch) for light + dark.
-- **Style:** minimal, generous whitespace, soft cards, restrained motion. Calm and professional.
-- **Charts:** Recharts for the pie chart; custom timeline component for the Gantt.
+Each module: spinner loading state, **Copy to Clipboard** + **Download .txt** buttons, success toast (sonner), and the Responsible AI guardrail disclaimer under every output.
 
-### Technical plan
-- **Backend:** Enable Lovable Cloud. Email/password + Google auth. Managed `_authenticated` route gate.
-- **Database tables (all with RLS scoped to `auth.uid()` + GRANTs):**
-  - `charts` (id, owner_id, name, created_at)
-  - `collaborators` (id, chart_id, name, experience, hourly_cost)
-  - `tasks` (id, chart_id, name, category, start_date, end_date, notes, is_complete)
-  - `task_assignees` (task_id, collaborator_id) — join table for many-to-many assignment
-  - Ownership enforced through `chart_id → charts.owner_id`.
-- **Data access:** `createServerFn` for reads/writes acting as the signed-in user; TanStack Query for caching; mutations invalidate the relevant chart queries.
-- **Progress & cost:** computed in the client/query layer from tasks + assignments (no stored derived columns).
+## Responsible AI page
+Standalone route: full guardrail disclaimer + data-privacy transparency (client-side BYOK key handling, no telemetry, what is/isn't stored).
 
-### Notes
-- Progress is auto-derived from completed assigned tasks; pie chart is based on planned duration (start→end), per your choices.
-- I'll seed a small demo chart on first sign-in so the timeline/pie/table aren't empty.
+## Settings page
+Engine dropdown + password-masked API key input saved to `localStorage`. Explains each engine. Persists engine choice per user.
+
+## How requests are built
+A shared `runAI(moduleType, inputs)` helper:
+- Prepends a system prompt: *"Tailor all responses to the following user context: [Global Context]"* plus a module-specific instruction requesting structured JSON.
+- Branches by engine: mock / Lovable AI server fn / Gemini fetch / OpenAI fetch.
+- Each module parses the structured result into its display shape, with graceful fallback if the model returns prose.
+
+## Technical notes
+- Routes: `src/routes/_authenticated/workforce.tsx` (sidebar layout + Outlet) with children `workforce.email.tsx`, `workforce.meetings.tsx`, `workforce.planner.tsx`, `workforce.responsible-ai.tsx`, `workforce.settings.tsx`.
+- Lovable AI path: a `createServerFn` in `src/lib/workforce-ai.functions.ts` using the Lovable AI Gateway helper with `google/gemini-3-flash-preview` and structured output; BYOK paths run client-side only.
+- DB migration: `workforce_settings` table (user_id PK, global_context text, engine text) with GRANTs + RLS scoped to `auth.uid()`. BYOK keys are NOT stored server-side.
+- Reuse existing shadcn components (Button, Card, Tabs, Table, Textarea, Select, Badge), sonner toasts, and theme tokens; add Slate/Zinc accents within the existing token system (no hardcoded colors).
+- Dashboard gets a "WorkforceAI Assistant" entry card linking into the section.
+
+After building, I'll verify the build, then smoke-test Mock mode end-to-end across all three modules.
