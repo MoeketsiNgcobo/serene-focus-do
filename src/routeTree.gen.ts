@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedWorkforceRouteImport } from './routes/_authenticated/workforce'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedWorkforceIndexRouteImport } from './routes/_authenticated/workforce.index'
 import { Route as AuthenticatedChartChartIdRouteImport } from './routes/_authenticated/chart.$chartId'
 
 const AuthRoute = AuthRouteImport.update({
@@ -40,6 +41,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedWorkforceIndexRoute =
+  AuthenticatedWorkforceIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedWorkforceRoute,
+  } as any)
 const AuthenticatedChartChartIdRoute =
   AuthenticatedChartChartIdRouteImport.update({
     id: '/chart/$chartId',
@@ -51,15 +58,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/workforce': typeof AuthenticatedWorkforceRoute
+  '/workforce': typeof AuthenticatedWorkforceRouteWithChildren
   '/chart/$chartId': typeof AuthenticatedChartChartIdRoute
+  '/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/workforce': typeof AuthenticatedWorkforceRoute
   '/chart/$chartId': typeof AuthenticatedChartChartIdRoute
+  '/workforce': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -67,14 +75,21 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/workforce': typeof AuthenticatedWorkforceRoute
+  '/_authenticated/workforce': typeof AuthenticatedWorkforceRouteWithChildren
   '/_authenticated/chart/$chartId': typeof AuthenticatedChartChartIdRoute
+  '/_authenticated/workforce/': typeof AuthenticatedWorkforceIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/workforce' | '/chart/$chartId'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/workforce'
+    | '/chart/$chartId'
+    | '/workforce/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/workforce' | '/chart/$chartId'
+  to: '/' | '/auth' | '/dashboard' | '/chart/$chartId' | '/workforce'
   id:
     | '__root__'
     | '/'
@@ -83,6 +98,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/workforce'
     | '/_authenticated/chart/$chartId'
+    | '/_authenticated/workforce/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -128,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/workforce/': {
+      id: '/_authenticated/workforce/'
+      path: '/'
+      fullPath: '/workforce/'
+      preLoaderRoute: typeof AuthenticatedWorkforceIndexRouteImport
+      parentRoute: typeof AuthenticatedWorkforceRoute
+    }
     '/_authenticated/chart/$chartId': {
       id: '/_authenticated/chart/$chartId'
       path: '/chart/$chartId'
@@ -138,15 +161,29 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedWorkforceRouteChildren {
+  AuthenticatedWorkforceIndexRoute: typeof AuthenticatedWorkforceIndexRoute
+}
+
+const AuthenticatedWorkforceRouteChildren: AuthenticatedWorkforceRouteChildren =
+  {
+    AuthenticatedWorkforceIndexRoute: AuthenticatedWorkforceIndexRoute,
+  }
+
+const AuthenticatedWorkforceRouteWithChildren =
+  AuthenticatedWorkforceRoute._addFileChildren(
+    AuthenticatedWorkforceRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedWorkforceRoute: typeof AuthenticatedWorkforceRoute
+  AuthenticatedWorkforceRoute: typeof AuthenticatedWorkforceRouteWithChildren
   AuthenticatedChartChartIdRoute: typeof AuthenticatedChartChartIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedWorkforceRoute: AuthenticatedWorkforceRoute,
+  AuthenticatedWorkforceRoute: AuthenticatedWorkforceRouteWithChildren,
   AuthenticatedChartChartIdRoute: AuthenticatedChartChartIdRoute,
 }
 
